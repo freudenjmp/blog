@@ -1,0 +1,23 @@
+version: "3.3"
+
+# docker compose pull
+# clear && docker compose up --remove-orphans
+# docker attach freudenjmp
+# docker exec -it freudenjmp /bin/bash
+
+services:
+  freudenjmp:
+    image: ruby:latest
+    container_name: freudenjmp
+    network_mode: host
+    stdin_open: true
+    tty: true
+#    ports:
+#      - "35729:35729"
+#      - "4000:4000"
+    volumes:
+      - "./:/blog"
+    working_dir: /blog
+    command: /bin/bash -c "bundle && bundle exec jekyll serve --livereload -w --force_polling"
+    environment:
+      JEKYLL_ENV: development
