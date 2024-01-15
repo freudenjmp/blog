@@ -1,0 +1,2 @@
+https://mermaid.js.org/
+https://chirpy.cotes.page/posts/write-a-new-post/ => result: https://chirpy.cotes.page/posts/text-and-typography/
