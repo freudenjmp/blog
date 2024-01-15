@@ -5,7 +5,7 @@ categories: [counter-strike, reversing, esportal]
 tags: [counter-strike, reversing, esportal]
 image:
   path: assets/img/posts/no-user-logon/2fast4valve.jpg
-  alt: 2FAST4VALVE
+  alt: A solution to the infamous `No user logon` issue in Counter-Strike that existed for over a decade.
 mermaid: true
 toc: true
 ---
@@ -14,7 +14,9 @@ Valve has shown to occasionally not act on community feedback and bug reports. A
 
 #### tl;dr
 
-To fix the infamous `No user logon` issue in Counter-Strike that exists for over a decade, here are a few popular mitigations that do absolutely jack shit to fix the root cause. If you found this article via Google: STOP, DO NOT DO THIS!
+To fix the infamous `No user logon` issue in Counter-Strike that existed for over a decade, wait 10 seconds in main menu after starting CS2, so Steam can properly validate your Steam ID.
+
+Here are a few popular mitigations that do absolutely jack shit to fix the root cause. If you've found this article via Google: STOP, DO NOT DO THESE:
 
 * Reinstall the game
 * Validate the game files
@@ -26,9 +28,9 @@ To learn what to do instead, read this article.
 
 ## Introduction
 
-_(You can skip to [No user logon](#no-user-logon) if you don't care about the history.)_
+_(You can skip to [No user logon](#no-user-logon) if you don't care about the history of Counter-Strike or you can skip to [Solution](#solution) if you don't care about the technical details/root cause.)_
 
-[Counter-Strike](https://store.steampowered.com/app/730/CounterStrike_2/) is a famous game developed by [Valve](https://www.valvesoftware.com/en/). Recently, Counter-Strike 2 (CS2) has been published and _replaced_ (!) its predecessor Counter-Strike: Global Offensive (CS:GO). Some people tend to not consider CS2 a game but one big bug. While this is maybe a bit harsh, it's not far from the truth:
+[Counter-Strike](https://store.steampowered.com/app/730/CounterStrike_2/) is a famous game developed by [Valve](https://www.valvesoftware.com/en/). Recently, Counter-Strike 2 (CS2) has been published and has _replaced_ (!) its predecessor Counter-Strike: Global Offensive (CS:GO). Some people tend to not consider CS2 a game but one big bug. While this may be a bit harsh, it's not far from the truth:
 
 * You could [teleport yourself to any location on the map](https://store.steampowered.com/news/app/730/view/5484883079143170845?l=english)
 * You could [overcome physical limitations](https://youtu.be/j9g6F5IopJc)
@@ -40,7 +42,7 @@ Be prepared for new bugs appearing, as Valve didn't manage to include CS2 in [Va
 
 > Effective 6/14/2023 10 AM PDT, CS:GO is out-of-scope for new reports. Reports for CS2 Limited Test are currently out-of-scope.
 
-However, this of course didn't stop us from reporting bugs to Valve via e-mail. I hope you are not surprised to learn that these bugs haven't been fixed nor did they bother to reply. We have at least one critical zero-day that compromises the competitive integrity of the game which is yet under the [industry-standard 90-day responsible disclosure time frame](https://versprite.com/blog/what-is-responsible-disclosure/).
+However, this of course didn't stop us from reporting bugs to Valve via e-mail. I hope you are not surprised to learn that these bugs have neither been fixed nor did they bother to reply. We have found at least one critical zero-day that compromises the competitive integrity of the game which is yet under the [industry-standard 90-day responsible disclosure time frame](https://versprite.com/blog/what-is-responsible-disclosure/).
 
 Notable is that CS2 _replaced_ CS:GO on September 27, 2023, which is a novum. This means CS:GO can't be played anymore by the average user. Such a hard cutoff date is a new level of "_forcing things on the community they maybe don't like_". Gamers and platforms such as my employer [Esportal](https://esportal.com) were suddenly forced to use CS2.
 
@@ -51,10 +53,10 @@ Since middle of 2023, when CS2 release was apparent and we started to prepare su
 ```mermaid
 journey
   section My working day before it even starts at 9 AM
-    Enthusiastic to build new features: 7
-    Read Slack notifications: 5
-    Asked to fix yet another CS2 bug: 3
-    Realizing the bug is 10 years old: 1
+    Enthusiastic morning: 7
+    Read Slack: 5
+    Yet another CS2 bug: 3
+    Bug is 10 years old: 1
 ```
 
 ## No user logon
@@ -64,7 +66,7 @@ Bugs that are reported by the community for years and years are still not fixed 
 ![No user logon](assets/img/posts/no-user-logon/no-user-logon.jpg)
 _The infamous "No user logon" disconnection mid-game_
 
-For years ([2008](https://www.techsupportforum.com/threads/counter-strike-source-no-steam-logon-error.214386/), [2011](https://www.elitepvpers.com/forum/counter-strike/1264745-no-steam-logon.html), [2013](https://www.reddit.com/r/GlobalOffensive/comments/1fct7v/no_steam_logon_problem_need_help/), [2014](https://www.reddit.com/r/GlobalOffensive/comments/21auhx/kicked_for_no_steam_logon/), [2017](https://steamcommunity.com/discussions/forum/1/143387886726485073/), [2017](https://www.reddit.com/r/GlobalOffensive/comments/79i69y/no_user_logon/), [2018](https://steamcommunity.com/app/730/discussions/0/1727575977593194982/), [2021](https://steamcommunity.com/app/730/discussions/0/4809273833195803820/), [2023](https://www.reddit.com/r/FACEITcom/comments/nz3lmq/no_user_logon_problem_how_to_fix/), [2023](https://www.reddit.com/r/csgo/comments/16k7ioj/no_user_logon/)) people around the world have been reporting this issue in multiple forums including the official support forum from Valve. Note that from a technical perspective `No user logon` and the sometimes mentioned `No steam logon` are likely just different names for the same root cause. I can't know for sure but it would make sense.
+For years ([2008](https://www.techsupportforum.com/threads/counter-strike-source-no-steam-logon-error.214386/), [2011](https://www.elitepvpers.com/forum/counter-strike/1264745-no-steam-logon.html), [2013](https://www.reddit.com/r/GlobalOffensive/comments/1fct7v/no_steam_logon_problem_need_help/), [2014](https://www.reddit.com/r/GlobalOffensive/comments/21auhx/kicked_for_no_steam_logon/), [2017](https://steamcommunity.com/discussions/forum/1/143387886726485073/), [2017](https://www.reddit.com/r/GlobalOffensive/comments/79i69y/no_user_logon/), [2018](https://steamcommunity.com/app/730/discussions/0/1727575977593194982/), [2021](https://steamcommunity.com/app/730/discussions/0/4809273833195803820/), [2023](https://www.reddit.com/r/FACEITcom/comments/nz3lmq/no_user_logon_problem_how_to_fix/), [2023](https://www.reddit.com/r/csgo/comments/16k7ioj/no_user_logon/)) people around the world have been reporting this issue in multiple forums, including the official support forum from Valve. Note that from a technical perspective `No user logon` and the sometimes mentioned `No steam logon` are likely just different names for the same root cause. I can't know for sure, but it would make sense.
 
 There are countless _proposed fixes_ to the issue:
 
@@ -196,7 +198,7 @@ $ grep -a "STEAMAUTH:" engine2.so
 -insecure-insecure_forced_by_launchersystem/networkSTEAMAUTH: Client %s received failure code %d
 ```
 
-The last part of the match is interesting: `STEAMAUTH: Client %s received failure code %d`. As I confirmed this string is in `libengine2.dll`, I opened the file in a [reverse engineering](https://en.wikipedia.org/wiki/Reverse_engineering) tool, searched for the same string again and found the function which is referencing the string. This helps me to understand the context of the string and what it is used for.
+The last part of the match is interesting: `STEAMAUTH: Client %s received failure code %d`. As I confirmed this string is in `libengine2.so`, I opened the file in a [reverse engineering](https://en.wikipedia.org/wiki/Reverse_engineering) tool, searched for the same string again and found the function which is referencing the string. This helps me to understand the context of the string and what it is used for.
 
 A little trick that comes handy when looking at Counter-Strike is the [CS:GO source code leak](https://www.ign.com/articles/valve-counter-strike-source-code-leak-no-danger). The same string appears in the file [sv_steamauth.cpp on line 792](https://github.com/perilouswithadollarsign/cstrike15_src/blob/f82112a2388b841d72cb62ca48ab1846dfcc11c8/engine/sv_steamauth.cpp#L792). Utilizing a [decompiler](https://en.wikipedia.org/wiki/Decompiler) I was able to get pseudo C code that reflects what the function is doing in CS2. Combining the information from the source code leak and the reverse engineering tool I was able to understand the context of the string and what it is used for. The functions look nearly identical in both versions of Counter-Strike, but not 100%. Here is what the properly readable code for CS2 looks like:
 
@@ -249,7 +251,7 @@ Leaving other cases aside as I am only interested in failure code `8` at the mom
 * `k_EAuthSessionResponseAuthTicketInvalid` (maps to `8`)
 
 ## Steam3 validation:
-So... what is `CSteamServer3`? I don't know for sure but I can deduce from what I learned looking at the leaked CS:GO source code. Saving you from following me through the jungle of C++ classes and functions, here is what I found out as diagram followed by a textual explanation:
+So... what is `CSteamServer3`? I don't know for sure, but I can deduce from what I learned looking at the leaked CS:GO source code. Saving you from following me through the jungle of C++ classes and functions, here is what I found out as diagram followed by a textual explanation:
 
 ```mermaid
 sequenceDiagram
@@ -276,7 +278,7 @@ Steam3 server is likely responsible for authenticating users. It is not the same
 
 When connecting to a gameserver, your game (`CS2.exe`) tells the gameserver what your Steam ID is. As you could be a bad person, you could modify the game and tell the gameserver that your Steam ID is `STEAM_0:0:0` instead. That would be the Steam ID of the first Steam account ever created. The gameserver has no way to know at this point whether your information is correct or not. This is where the Steam3 server comes into play. The gameserver asks the Steam3 server if the Steam ID is valid and whether you own the game.
 
-Note that while the gameserver is waiting for the response, you can continually playing normally on the gameserver, but without skins.
+Note that while the gameserver is waiting for the response, you can continue playing normally on the gameserver, but without skins.
 
 If the Steam3 server says `yes`, the gameserver starts trusting that information. It can now do interesting stuff with it, like starting to assign your personal skins to you. This would be the moment where you and others can see your skins.
 
@@ -288,7 +290,7 @@ If the Steam3 server says `no` instead, the gameserver knows that you (or your g
 
 The above scenario is not fully complete, though. It imposes one problem: it only guarantees that the Steam ID told to the gameserver is valid and owns the game. It does _not_ proof that the instance of `CS2.exe` that connected to the gameserver is actually the one belonging to the signed in Steam account running on the same machine via `Steam.exe`. So what is needed is a way to proof that `CS2.exe` is actually trustable.
 
-This can be achieved by ensuring that `CS2.exe` can initiate a connection to Steam3 via `Steam.exe` running on the same machine. As `Steam.exe` as the Steam client knows the account which is currently signed in, it compares the Steam ID sent by `CS2.exe` to it. If they match, `Steam.exe` tells the Steam3 server that the Steam ID is valid for `CS2.exe`. If it can't match them, it doesn't tell the Steam3 server about it.
+This can be achieved by ensuring that `CS2.exe` can initiate a connection to Steam3 via `Steam.exe` running on the same machine. As `Steam.exe` as the Steam client knows the account which is currently signed in, it compares the Steam ID sent by `CS2.exe` to it. If they match, `Steam.exe` tells the Steam3 server that the Steam ID is valid, for `CS2.exe`. If it can't match them, it doesn't tell the Steam3 server about it.
 
 ```mermaid
 sequenceDiagram
@@ -324,7 +326,7 @@ Reasons why Steam3 server could answer `no` are for example:
 1. Steam3 is broken and answers wrong things: unlikely, even Valve can be trusted to get this right
 1. Steam3 server is under maintenance: unlikely, as other users can connect
 1. The Steam ID is not valid: unlikely, usually our players are trustworthy
-1. The Steam ID is valid but the instance of `CS2.exe` is not trustable: likely
+1. The Steam ID is valid, but the instance of `CS2.exe` is not trustable: likely
 1. Steam3 server doesn't know about the Steam ID for this `CS2.exe` instance: likely
 
 Aha! The last two points are likely candidates for the issue. But why do some users have problems with untrusted `CS2.exe` instances while other users are fine? And why was it possible that user `Bob` was able to validate their Steam ID after 9 minutes?
@@ -345,11 +347,11 @@ It seems like the gameserver disconnects the user with `NETWORK_DISCONNECT_LOOPS
 
 Again: why are some users getting disconnected with `NETWORK_DISCONNECT_LOOPSHUTDOWN` while others aren't?
 
-## Loops in the Source engine
+## Loops in the Source 2 engine
 
 A loop in terms of software engineering is something that is executed until a specific goal is reached.
 
-The Source engine has one active loop at a time. When `CS2.exe` starts, it is started with an active loop. A loop processes things in the background, waits until they are finished and once they are finished, invokes the next loop. A loop can run for a very long time, for example the `game` loop runs as long as you are playing. A loop can be shutdown in case something goes wrong.
+The Source 2 engine has one active loop at a time. When `CS2.exe` starts, it is started with an active loop. A loop processes things in the background, waits until they are finished and once they are finished, invokes the next loop. A loop can run for a very long time, for example the `game` loop runs as long as you are playing. A loop can be shutdown in case something goes wrong.
 
 In this example, a the `levelload_loop` is executed until the level, materials and physics engine are loaded. Once they are loaded, the `levelload_loop` is considered finished and it executes the `game_loop`:
 
@@ -383,12 +385,12 @@ A valid shutdown reason for this loop would be missing material required for the
 
 So if a loop can be shutdown, and the disconnect reason is `NETWORK_DISCONNECT_LOOPSHUTDOWN`...
 
-Yes, I hear you thinking. This means that the first disconnection is initiated by `CS2.exe` because some loop is shutdown. The user is not disconnected by the gameserver, but by themselves.
+Yes, I hear you thinking. This means that the first disconnection is initiated by `CS2.exe` because some loop is shutdown. The user is not disconnected by the gameserver but by themselves.
 
 No wonder the root cause hasn't been found in so many years: it's not a bug in the gameserver, it's a bug in the game.
 
 ![WASSS](assets/img/posts/no-user-logon/ohne-pixel-wasss.gif){: width="220" height="220" }
-_Me at that very moment: the famous "WASSS" by twitch streamer [ohnePixel](https://www.twitch.tv/ohnepixel)<br/>The 175+ shows his and my heartbeat rate because I searched at the wrong place for years_
+_Me at that very moment: the famous "WASSS" by twitch streamer [ohnePixel](https://www.twitch.tv/ohnepixel)<br/>The 175+ shows his and my heartbeat rate because I searched in the wrong place for years_
 
 So the search of the root cause has to continue in `CS2.exe` and not on the gameserver side.
 
@@ -397,9 +399,9 @@ So the search of the root cause has to continue in `CS2.exe` and not on the game
 
 ## CS2 startup procedure
 
-When `CS2.exe` is started it executes various loops from the Source engine. The final loop is the `game` loop which is responsible for the actual menu interaction, user interaction and gameplay. It is _the_ loop that is running as long as the game is fully loaded and/or you are playing.
+When `CS2.exe` is started it executes various loops from the Source 2 engine. The final loop is the `game` loop which is responsible for the actual menu interaction, user interaction and gameplay. It is _the_ loop that is running as long as the game is fully loaded and/or you are playing.
 
-As `game` is the final loop it can't be the one which is shutdown and so it can't be the one initiating the disconnection with `NETWORK_DISCONNECT_LOOPSHUTDOWN` as otherwise the game would end. To find out which loops are executed before the `game` loop, I decided to look at the output of the game console of `CS2.exe` which can be enabled in the game settings.
+As `game` is the final loop it can't be the one which is shut down and so it can't be the one initiating the disconnection with `NETWORK_DISCONNECT_LOOPSHUTDOWN` as otherwise the game would end. To find out which loops are executed before the `game` loop, I decided to look at the output of the game console of `CS2.exe`, which can be enabled in the game settings.
 
 Among a lot of other things, the following can be observed:
 
@@ -482,7 +484,7 @@ sequenceDiagram
   Gameserver->>"game" loop: Disconnect with "No user logon"
 ```
 
-_Note: while all of the examples, names and explanations here based on CS2 the bug is equivalent in CS:GO and even Counter-Strike: Source, though the technical names and means are different because those games are based on an older version of the Source engine._
+_Note: while all of the examples, names and explanations here based on CS2, the bug is equivalent in CS:GO and even Counter-Strike: Source, though the technical names and means are different because those games are based on an older version of the Source engine._
 
 ## Bug invocation
 
@@ -490,9 +492,9 @@ But why is `levelload` prematurely shutdown and why is it only happening to some
 
 Remember the multitude of people who thought they have fixed the issue? They didn't, they were just lucky because the bug invocation is a [race condition](https://en.wikipedia.org/wiki/Race_condition) when CS2 is started in a specific way! Race condition means that the behavior of an application is dependent on timing, and that's what happens here.
 
-The `levelload` loop is shutdown before it can complete sometimes. And it's only happening to some users because it depends on the following factors:
+The `levelload` loop is shut down before it can complete sometimes. And it's only happening to some users because it depends on the following factors:
 
-1. ***The way Counter-Strike is started**: the blame factor is 90%
+1. **The way Counter-Strike is started**: the blame factor is 90%
 1. Speed of the computer: blame factor is 3%
 1. Speed of the user: blame factor is 3%
 1. State of the moon: blame factor is 3%
@@ -500,7 +502,7 @@ The `levelload` loop is shutdown before it can complete sometimes. And it's only
 
 And what would be the way to start CS2 so the bug triggers with 99% certainty?
 
-> Triggering the bug with 90% certainty: connect to a gameserver without CS2 being open before.
+> Triggering the bug with 99% certainty: connect to a gameserver without CS2 being open before.
 {: .prompt-tip }
 
 And that's why everyone is just too fast (to connect) for Valve:
@@ -518,7 +520,7 @@ sequenceDiagram
   end
   CS2.exe->>"levelload" loop: Starts
   rect rgb(255, 0, 0)
-    Note over "levelload" loop: THE BUG:<br/><br/>Loop shutdowns prematurely<br/>because Steam.exe tells CS2.exe<br/>to connect to a gameserver<br/>too fast because you asked it to.
+    Note over "levelload" loop: THE BUG:<br/><br/>Loop shuts down prematurely<br/>because Steam.exe tells CS2.exe<br/>to connect to a gameserver<br/>too fast because you asked it to.
   end
   "levelload" loop->>"game" loop: Starts
   "game" loop->>Gameserver: Connect with untrusted Steam ID
@@ -535,7 +537,7 @@ There are multiple ways of doing that:
 * Manually connecting to a server using Steams browser protocol (`steam://connect/127.0.0.1:27015`)
 outside the game while it's not running yet or has _just_ been started before
 
-You can increase chances by starting CS2 and before it has fully initialized, doing one of the above.
+You can increase chances by starting CS2 and, before it has fully initialized, doing one of the above.
 
 ## Solution
 
@@ -553,11 +555,17 @@ You can increase chances by starting CS2 and before it has fully initialized, do
 > Start CS2 well before you connect to a gameserver. It's good enough to wait until you see the game console or wait 5-10 seconds after you saw the intro video.
 {: .prompt-tip }
 
+If you want to be absolutely sure you are not affected by the bug, start CS2, open the game console and type `status`. Check the output for this line. If you see it, you are good to go:
+
+```
+[EngineServiceManager] @ Current  :  game
+```
+
 ## Conclusion
 
 To close the question you are still asking yourself: it was possible for the user `Bob` to validate 9 minutes after the first try for just one reason: they restarted CS2 and weren't unlucky that time.
 
-Another conclusion is: once a Steam ID is validated, it will never fail later for that game instance except you close your Steam client while `CS2.exe` is running.
+Another conclusion is: once a Steam ID is validated, it will never fail later for that game instance except if you close your Steam client while `CS2.exe` is running.
 
 ## Closing words
 
@@ -574,6 +582,15 @@ xychart-beta
   y-axis "Share of daily tickets (in %)" 0 --> 23
   bar [6, 10, 18, 18, 23, 10, 9, 0, 0, 0]
 ```
+
+### Meta
+
+Social discussions:
+
+* [HackerNews](https://news.ycombinator.com/item?id=38977128)
+* [reddit](https://www.reddit.com/r/GlobalOffensive/comments/194x26j/a_decade_long_steam_issue_is_everyone_just_too/)
+* [Twitter/X](https://twitter.com/freudenjmp/status/1745824865595097336)
+* [Mastadon](https://infosec.exchange/@freudenjmp/111743602968985703)
 
 Thanks to my colleagues for proof-reading and providing feedback!
 
